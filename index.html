@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Viatura - URE Araçatuba</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #1e293b; --secondary: #334155; --accent: #2563eb; --accent-hover: #1d4ed8; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --bg-body: #f1f5f9; --card-bg: #ffffff; --spin-color: #0ea5e9; --onix-color: #8b5cf6; --text-main: #0f172a; --text-muted: #64748b; --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1); --radius: 12px; --border: #e2e8f0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); margin: 0; padding: 20px; color: var(--text-main); }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        header h2 { font-weight: 800; color: var(--primary); margin: 0; font-size: 28px; text-transform: uppercase; }
+        header h3 { color: var(--accent); font-size: 12px; letter-spacing: 2px; margin-top: 5px; }
+        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow-md); border-left: 5px solid var(--accent); }
+        .stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .stat-value { font-size: 24px; font-weight: 800; display: block; }
+        .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-md); padding: 25px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group-full { grid-column: 1 / -1; }
+        label { font-size: 11px; font-weight: 700; margin-bottom: 6px; color: var(--secondary); text-transform: uppercase; }
+        input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; background: white; }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 10px; transition: 0.2s; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .filter-section { background: #1e293b; padding: 15px; border-radius: var(--radius) var(--radius) 0 0; display: flex; justify-content: center; gap: 10px; }
+        .table-container { background: var(--card-bg); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow-md); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        th { background: #f8fafc; padding: 12px; text-align: left; font-size: 10px; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .btn-whatsapp { color: #25d366; text-decoration: none; font-size: 18px; cursor: pointer; margin-right: 10px; }
+        .btn-delete { color: var(--danger); background: none; border: none; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .badge { font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h2>AGENDA VIATURA</h2>
+        <h3>URE Araçatuba</h3>
+    </header>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <span class="stat-label">Total de Viagens (Filtro)</span>
+            <span class="stat-value" id="statTotal">0</span>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--spin-color)">
+            <span class="stat-label">Viagens SPIN</span>
+            <span class="stat-value" id="statSpin">0</span>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--onix-color)">
+            <span class="stat-label">Viagens ONIX</span>
+            <span class="stat-value" id="statOnix">0</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="form-grid">
+            <div class="form-group"><label>📅 Saída</label><input type="date" id="dSaida"></div>
+            <div class="form-group"><label>🕒 Hora</label><input type="time" id="hSaida"></div>
+            <div class="form-group"><label>📅 Retorno</label><input type="date" id="dChegada"></div>
+            <div class="form-group"><label>🕒 Hora</label><input type="time" id="hChegada"></div>
+            
+            <div class="form-group">
+                <label>🚗 Viatura</label>
+                <select id="viatura">
+                    <option value="SPIN">SPIN (Chevrolet)</option>
+                    <option value="ONIX">ONIX (Chevrolet)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>👤 Condutor</label>
+                <select id="condutor">
+                    <option value="">Selecione...</option>
+                    <option value="Marcelo Bevilaqua">Marcelo Bevilaqua</option>
+                    <option value="Sandra Vieira">Sandra Vieira</option>
+                    <option value="Ágatha Helena">Ágatha Helena</option>
+                    <option value="José">José</option>
+                </select>
+            </div>
+            
+            <div class="form-group"><label>👥 Passageiro</label><input type="text" id="passageiro"></div>
+            <div class="form-group"><label>🏢 Seção</label><input type="text" id="secao"></div>
+            
+            <div class="form-group form-group-full">
+                <label>📍 Destino</label>
+                <select id="destino" multiple style="height: 100px;">
+                    <option value="Andradina">Andradina</option>
+                    <option value="Birigui">Birigui</option>
+                    <option value="São Paulo">São Paulo</option>
+                    <option value="Escola Abranche">Escola Abranche</option>
+                    <option value="Diretoria de Ensino">Diretoria de Ensino</option>
+                </select>
+                <span style="font-size: 10px; color: gray;">Segure CTRL para selecionar vários</span>
+            </div>
+            
+            <div class="form-group-full" style="text-align: right;"><button class="btn-primary" onclick="adicionarAgendamento()">Salvar Agendamento</button></div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <select id="filtroMes" onchange="renderizarTabela()">
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+            <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+            <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+        <select id="filtroAno" onchange="renderizarTabela()">
+            <option value="2025">2025</option><option value="2026">2026</option>
+        </select>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Saída</th><th>Hora</th><th>Retorno</th><th>Hora</th><th>Destino</th><th>Viatura</th><th>Condutor</th><th>Passageiro</th><th>Seção</th><th>Ações</th></tr></thead>
+            <tbody id="corpoTabela"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const URL_DATABASE = "https://script.google.com/macros/s/AKfycbxH3qt5S7GvxAcgGbP3qfe-iHXWyw7_oIZWeDWf5lnJKRG9DSnpB_eiDWiUGvKlvhrz/exec";
+    let dadosAtuais = [];
+
+    function limparData(val) {
+        if (!val || val === "" || val.toString().includes("1899")) return "-";
+        let str = val.toString();
+        if (str.includes("T")) str = str.split("T")[0];
+        return str.split("-").reverse().join("/");
+    }
+
+    function limparHora(val) {
+        if (!val || val === "" || val.toString().includes("1899")) return "--:--";
+        let str = val.toString();
+        return str.includes("T") ? str.split("T")[1].substring(0, 5) : str.substring(0, 5);
+    }
+
+    async function adicionarAgendamento() {
+        const btn = document.querySelector('.btn-primary');
+        const destinos = Array.from(document.getElementById('destino').selectedOptions).map(o => o.value);
+        
+        const fields = {
+            dSaida: document.getElementById('dSaida').value,
+            hSaida: document.getElementById('hSaida').value,
+            dChegada: document.getElementById('dChegada').value,
+            hChegada: document.getElementById('hChegada').value,
+            viatura: document.getElementById('viatura').value,
+            condutor: document.getElementById('condutor').value,
+            passageiro: document.getElementById('passageiro').value,
+            secao: document.getElementById('secao').value,
+            destino: destinos.join(", ")
+        };
+
+        if(!fields.dSaida || !fields.condutor || destinos.length === 0) return alert("Preencha Data, Condutor e Destino!");
+        
+        btn.innerText = "Salvando...";
+        btn.disabled = true;
+
+        try {
+            await fetch(URL_DATABASE, { method: 'POST', body: JSON.stringify(fields) });
+            alert("Agendamento guardado na nuvem!");
+            renderizarTabela();
+        } catch (e) { alert("Erro ao salvar."); }
+        finally { btn.innerText = "Salvar Agendamento"; btn.disabled = false; }
+    }
+
+    async function renderizarTabela() {
+        const corpo = document.getElementById('corpoTabela');
+        corpo.innerHTML = "<tr><td colspan='10' style='text-align:center'>🔄 Carregando dados...</td></tr>";
+        
+        try {
+            const res = await fetch(URL_DATABASE);
+            dadosAtuais = await res.json();
+            
+            const mesSel = document.getElementById('filtroMes').value;
+            const anoSel = document.getElementById('filtroAno').value;
+
+            const filtrados = dadosAtuais.filter(item => {
+                if(!item.dSaida) return false;
+                return item.dSaida.toString().includes(`${anoSel}-${mesSel}`);
+            });
+
+            corpo.innerHTML = filtrados.length ? "" : "<tr><td colspan='10' style='text-align:center'>Nenhum agendamento para este mês.</td></tr>";
+            
+            filtrados.forEach((item, index) => {
+                corpo.innerHTML += `<tr>
+                    <td>${limparData(item.dSaida)}</td>
+                    <td>${limparHora(item.hSaida)}</td>
+                    <td>${limparData(item.dChegada)}</td>
+                    <td>${limparHora(item.hChegada)}</td>
+                    <td><b>${item.destino}</b></td>
+                    <td><span class="badge" style="background:#eff6ff; color:#2563eb">${item.viatura}</span></td>
+                    <td>${item.condutor}</td>
+                    <td>${item.passageiro || '-'}</td>
+                    <td>${item.secao || '-'}</td>
+                    <td>
+                        <a class="btn-whatsapp" onclick="enviarZap(${index})">📲</a>
+                        <button class="btn-delete" onclick="excluirLinha(${index})">×</button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('statTotal').innerText = filtrados.length;
+            document.getElementById('statSpin').innerText = filtrados.filter(i => i.viatura === 'SPIN').length;
+            document.getElementById('statOnix').innerText = filtrados.filter(i => i.viatura === 'ONIX').length;
+
+        } catch (e) { corpo.innerHTML = "<tr><td colspan='10' style='text-align:center'>Erro ao conectar.</td></tr>"; }
+    }
+
+    function enviarZap(idx) {
+        const item = dadosAtuais[idx];
+        const msg = `Olá *${item.condutor}*, viagem para *${item.destino}* confirmada:\n📅 *Saída:* ${limparData(item.dSaida)} às ${limparHora(item.hSaida)}\n🚗 *Viatura:* ${item.viatura}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    async function excluirLinha(idx) {
+        if(confirm("Deseja apagar este registro da Planilha Google?")) {
+            alert("A funcionalidade de exclusão direta via Web exige um comando extra no Apps Script. Por enquanto, apague direto na planilha para maior segurança dos dados da URE.");
+        }
+    }
+
+    window.onload = () => {
+        const hoje = new Date();
+        document.getElementById('filtroMes').value = String(hoje.getMonth() + 1).padStart(2, '0');
+        renderizarTabela();
+    };
+</script>
+</body>
+</html>
